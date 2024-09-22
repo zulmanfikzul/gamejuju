@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Jujur vs Nekat</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background: linear-gradient(to right, #4facfe, #00f2fe);
+            font-family: 'Arial', sans-serif;
+            color: white;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            font-size: 6vw; /* Sesuaikan ukuran teks agar responsif */
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+        .names {
+            font-size: 5vw;
+            margin-bottom: 40px;
+            font-weight: bold;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+        button, input {
+            padding: 10px 20px;
+            font-size: 5vw; /* Ukuran disesuaikan */
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        input {
+            width: 70vw;
+            background-color: #f0f0f0;
+            border: 2px solid #fff;
+            text-align: center;
+        }
+        button {
+            background-color: #ff4757;
+            color: white;
+            transition: background-color 0.3s;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        button:hover {
+            background-color: #ff6b81;
+        }
+        #result {
+            margin-top: 30px;
+            font-size: 8vw;
+            font-weight: bold;
+            transition: opacity 0.5s ease;
+            opacity: 0;
+        }
+        #chooseButton, #resultSection {
+            display: none;
+        }
+        #footer {
+            position: absolute;
+            bottom: 10px;
+            font-size: 4vw;
+            color: #ffffff;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Pilih antara Jujur dan Nekat!</h1>
+
+    <!-- Input Nama untuk Dua Pemain -->
+    <div id="nameSection">
+        <input type="text" id="nameInput1" placeholder="Nama Pemain 1">
+        <input type="text" id="nameInput2" placeholder="Nama Pemain 2">
+        <button id="startButton">Mulai Permainan</button>
+    </div>
+
+    <!-- Tampilkan Nama Pemain -->
+    <div class="names" id="currentPlayer"></div>
+
+    <!-- Tombol Pilih dan Hasil -->
+    <button id="chooseButton">Gilir</button>
+    <div id="resultSection">
+        <div id="result"></div>
+    </div>
+
+    <!-- Footer dengan Nama Pembuat -->
+    <div id="footer">
+        Dibuat oleh Zulman
+    </div>
+
+    <script>
+        const choices = ["Jujur", "Nekat"];
+        let players = [];
+        let currentPlayerIndex = 0;
+
+        // Start game after both players enter their names
+        document.getElementById("startButton").addEventListener("click", function() {
+            const nameInput1 = document.getElementById("nameInput1").value;
+            const nameInput2 = document.getElementById("nameInput2").value;
+
+            if (nameInput1.trim() !== "" && nameInput2.trim() !== "") {
+                players = [nameInput1, nameInput2];
+                document.getElementById("currentPlayer").textContent = "Giliran: " + players[currentPlayerIndex];
+
+                // Sembunyikan input nama dan tampilkan tombol Gilir
+                document.getElementById("nameSection").style.display = "none";
+                document.getElementById("chooseButton").style.display = "block";
+                document.getElementById("resultSection").style.display = "block";
+            } else {
+                alert("Kedua nama pemain harus diisi!");
+            }
+        });
+
+        // Pilih Jujur atau Nekat
+        document.getElementById("chooseButton").addEventListener("click", function() {
+            let iterations = 10; // jumlah putaran
+            let currentChoice = 0;
+            const resultElement = document.getElementById("result");
+            resultElement.style.opacity = 0; // Sembunyikan hasil sebelumnya
+
+            const interval = setInterval(() => {
+                currentChoice = (currentChoice + 1) % choices.length;
+                resultElement.textContent = choices[currentChoice];
+            }, 100); // ganti setiap 100ms
+
+            setTimeout(() => {
+                clearInterval(interval); // hentikan putaran
+                const finalChoice = choices[Math.floor(Math.random() * choices.length)];
+                resultElement.textContent = finalChoice + " untuk " + players[currentPlayerIndex]; // Tampilkan hasil dengan nama pemain
+                resultElement.style.opacity = 1; // Tampilkan hasil
+
+                // Ganti giliran pemain
+                currentPlayerIndex = (currentPlayerIndex + 1) % players.length;
+                document.getElementById("currentPlayer").textContent = "Giliran: " + players[currentPlayerIndex];
+            }, iterations * 100); // total waktu putaran
+        });
+    </script>
+
+</body>
+</html>
